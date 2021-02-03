@@ -23,7 +23,6 @@ class ViewController: UIViewController {
     var finishedCalculating = false
     var negativeNumberEvaluator = false
     var isDecimal = false
-    var isAlreadyZero = false
     
     var isClearAll: Bool = true {
         didSet{
@@ -52,12 +51,14 @@ class ViewController: UIViewController {
             operationsLabel.text = calculator.result
             displayLabel.text = calculator.result
             finishedCalculating.toggle()
+//            print("here16")
         }
         
         if isTyping {
             calculator.setOperand(operand: Double(number) ?? 0.0)
             numberExists = true
             operatorExists = false
+//            print("here15")
         }
         
         if operatorExists {
@@ -75,7 +76,6 @@ class ViewController: UIViewController {
                 } else {
                     operationsLabel.text! += " \(operation.text!) "
                 }
-
                 isTyping = false
                 displayLabel.text = calculator.result
                 
@@ -84,7 +84,6 @@ class ViewController: UIViewController {
                 negativeNumberEvaluator = true
                 
                 if numberExists {
-                    
                     if Double(calculator.result) ?? 0.0 < 0.0 {
                         operationsLabel.text = String((operationsLabel.text?.dropLast(calculator.result.count - 1))!)
                         operationsLabel.text! += ("(\(calculator.result))")
@@ -92,27 +91,22 @@ class ViewController: UIViewController {
                         operationsLabel.text = String((operationsLabel.text?.dropLast(calculator.result.count + 3))!)
                         operationsLabel.text! += calculator.result
                     }
-                    
                     number = calculator.result
                     displayLabel.text = calculator.result
-                    
                 } else {
                     print("choose number first")
                 }
                 
             } else if operation.text == "%" {
-                
                 if numberExists {
-                    operationsLabel.text = String((operationsLabel.text?.dropLast())!)
+                    operationsLabel.text = String((operationsLabel.text?.dropLast(number.count))!)
                     operationsLabel.text! += calculator.result
                     number = calculator.result
                     displayLabel.text = calculator.result
                 } else {
                     print("choose number first")
                 }
-                
             } else {
-                
                 negativeNumberEvaluator.toggle()
                 finishedCalculating.toggle()
                 
@@ -123,6 +117,8 @@ class ViewController: UIViewController {
                 isTyping = false
                 displayLabel.text = calculator.result
                 operatorExists = false
+                
+//                print("here14")
             }
         }
         numberExists = false
@@ -131,10 +127,6 @@ class ViewController: UIViewController {
     
     
     @IBAction func numberButtonPressed(_ sender: Any) {
-        
-        if displayLabel.text == "0" {
-            displayLabel.text = ""
-        }
         
         if isClearAll {
             isClearAll.toggle()
@@ -148,76 +140,95 @@ class ViewController: UIViewController {
             operationsLabel.text = ""
             displayLabel.text = ""
             finishedCalculating.toggle()
+//            print("here13")
         }
         
         if !isTyping {
+            
             if buttonContent.text == "." && !isDecimal {
                 isDecimal = true
                 operationsLabel.text! += "0."
-                displayLabel.text! += "0."
+                displayLabel.text! = "0."
                 number = "0" + buttonContent.text!
-                print("here")
+//                print("here12")
             } else {
                 displayLabel.text = ""
                 operationsLabel.text! += buttonContent.text!
                 displayLabel.text! += buttonContent.text!
                 number = buttonContent.text ?? "0"
+//                print("here11")
             }
             isTyping.toggle()
-            print("here3")
+            
         } else {
+            
             if buttonContent.text == "." {
                 if isDecimal {
                     operationsLabel.text = operationsLabel.text!
                     displayLabel.text = displayLabel.text!
+//                    print("here4")
                 } else {
                     isDecimal = true
                     operationsLabel.text! += "."
                     displayLabel.text! += "."
                     number += buttonContent.text!
-                    print("here2")
+//                    print("here3")
                 }
             } else {
-                operationsLabel.text = operationsLabel.text! + buttonContent.text!
-                displayLabel.text = displayLabel.text! + buttonContent.text!
-                number += buttonContent.text!
-                print("here4")
+                if displayLabel.text == "0" {
+                    operationsLabel.text = operationsLabel.text!
+                    displayLabel.text = displayLabel.text!
+//                    print("here2")
+                } else {
+                    operationsLabel.text = operationsLabel.text! + buttonContent.text!
+                    displayLabel.text = displayLabel.text! + buttonContent.text!
+                    number += buttonContent.text!
+//                    print("here1")
+                }
             }
+            
         }
         
     }
     
     
     @IBAction func clearButtonPressed(_ sender: Any) {
+        
         guard let buttonContent = (sender as! UIButton).titleLabel else {
             return
         }
         
         if buttonContent.text == "C" {
+            
             if isTyping {
                 if operationsLabel.text?.delete() == "" {
                     operationsLabel.text = ""
                     displayLabel.text = "0"
+//                    print("here5")
                 } else {
                     operationsLabel.text = operationsLabel.text?.delete()
                     displayLabel.text = ""
+//                    print("here6")
                 }
                 number = "0"
             } else {
-                calculator.undo()
+                calculator.unDo()
                 operatorExists = false
                 operationsLabel.text = String((operationsLabel.text?.dropLast())!)
+//                print("here7")
             }
             
             if operationsLabel.text == "" {
                 if !isClearAll {
                     isClearAll.toggle()
+//                    print("here8")
                 }
             }
             
             if displayLabel.text == "" {
                 if !isClearAll {
                     isClearAll.toggle()
+//                    print("here9")
                 }
             }
             
@@ -235,8 +246,11 @@ class ViewController: UIViewController {
             isTyping = false
             numberExists = false
             isDecimal = false
+//            print("here10")
         }
+        
     }
+    
 }
 
 extension String {

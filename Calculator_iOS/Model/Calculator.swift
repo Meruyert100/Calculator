@@ -9,7 +9,7 @@ import Foundation
 
 class Calculator {
     
-    private var accumulator = 0.0
+    private var sum = 0.0
     
     enum Operation {
         case Unary((Double) -> Double)
@@ -22,7 +22,7 @@ class Calculator {
         var firstOperand: Double
     }
     
-    private var pending: BinaryOperation?
+    private var undone: BinaryOperation?
     
     var operations: [String : Operation] = [
         "+" : Operation.Binary({$0 + $1}),
@@ -37,26 +37,26 @@ class Calculator {
     
     var result: String {
         get {
-            if evaluateWholesomeness(number: accumulator) {
-                if let number = accumulator.toInt() {
+            if evaluateWholesomeness(number: sum) {
+                if let number = sum.toInt() {
                     return String(number)
                 } else {
-                    return String(accumulator)
+                    return String(sum)
                 }
             } else {
-                return String(accumulator)
+                return String(sum)
             }
         }
     }
     
     func setOperand(operand: Double) {
-        accumulator = operand
+        sum = operand
     }
     
     func completeBinaryOperation() {
-        if pending != nil {
-            accumulator = pending?.binaryFunction(pending?.firstOperand ?? accumulator, accumulator) ?? accumulator
-            pending = nil
+        if undone != nil {
+            sum = undone?.binaryFunction(undone?.firstOperand ?? sum, sum) ?? sum
+            undone = nil
         }
     }
     
@@ -66,12 +66,12 @@ class Calculator {
             switch operation {
             case .Binary(let function):
                 completeBinaryOperation()
-                pending = BinaryOperation(binaryFunction: function, firstOperand: accumulator)
+                undone = BinaryOperation(binaryFunction: function, firstOperand: sum)
             case .Unary(let function):
-                if accumulator == 0.0 && symbol == "+/-" && symbol == "%" {
+                if sum == 0.0 && symbol == "+/-" && symbol == "%" {
                     print("performOperation: operation cannot be calculated")
                 } else {
-                    accumulator = function(accumulator)
+                    sum = function(sum)
                 }
             case .Equals:
                 completeBinaryOperation()
@@ -80,22 +80,22 @@ class Calculator {
         }
     }
     
-    func undo() {
-        if pending != nil {
-            pending = nil
+    func unDo() {
+        if undone != nil {
+            undone = nil
         }
     }
     
     func clearHistory() {
-        accumulator = 0.0
-        pending = nil
+        sum = 0.0
+        undone = nil
     }
     
     func evaluateWholesomeness(number: Double) -> Bool {
-        let ceilAccumulator = number
-        let floorAccumulator = number
+        let ceilSum = number
+        let floorSum = number
         
-        return ceilAccumulator.rounded(.up) == floorAccumulator.rounded(.down)
+        return ceilSum.rounded(.up) == floorSum.rounded(.down)
     }
     
 }
