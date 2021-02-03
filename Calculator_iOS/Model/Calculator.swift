@@ -39,11 +39,14 @@ class Calculator {
         get {
             if evaluateWholesomeness(number: sum) {
                 if let number = sum.toInt() {
+//                    print("1")
                     return String(number)
                 } else {
+//                    print("2")
                     return String(sum)
                 }
             } else {
+//                print("3")
                 return String(sum)
             }
         }

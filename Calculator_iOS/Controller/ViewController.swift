@@ -114,9 +114,10 @@ class ViewController: UIViewController {
                     isClearAll.toggle()
                 }
                 
-                isTyping = false
+//                isTyping = false
                 displayLabel.text = calculator.result
-                operatorExists = false
+                number = calculator.result
+//                operatorExists = false
                 
 //                print("here14")
             }
