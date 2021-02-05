@@ -71,7 +71,7 @@ class Calculator {
                 completeBinaryOperation()
                 undone = BinaryOperation(binaryFunction: function, firstOperand: sum)
             case .Unary(let function):
-                if sum == 0.0 && symbol == "+/-" && symbol == "%" {
+                if sum == 0.0 && (symbol == "+/-" || symbol == "%") {
                     print("performOperation: operation cannot be calculated")
                 } else {
                     sum = function(sum)
